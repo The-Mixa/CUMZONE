@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+
+<h1 class="page-in-main">{{category}}</h1>
+{% if not products %}
+<h3 style="color:grey; font-weight: 800;">Продуктов пока нету(<br>Станьте первым энтузиастом,<br> который
+    набубенит сюда ненужных товаров!</h3>
+{% else %}
+<div class="products-content">
+    {% for product in products %}
+    <div class="product">
+
+        <div class="product-image">
+            <div class="carousel slide" id="carousel{{product.id}}">
+                <div class="carousel-indicators">
+                    {% if product.photos[1:] %}
+                    <button type="button" data-bs-target="#carousel{{product.id}}" data-bs-slide-to="0" class="active"
+                        aria-label="Slide 1"></button>
+                    {% for photo in product.photos[1:] %}
+                    <button type="button" data-bs-target="#carousel{{product.id}}" data-bs-slide-to="{{loop.index}}"
+                        aria-label="Slide {{loop.index + 1}}"></button>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <a href="/product/{{product.id}}">
+                            <img src="{{product.photos[0].path}}" class="d-block w-100" alt="иди нахуй">
+                        </a>
+                    </div>
+                    {% for photo in product.photos[1:] %}
+                    <div class="carousel-item">
+                        <a href="/product/{{product.id}}">
+                            <img src="{{photo.path}}" class="d-block w-100" alt="иди нахуй">
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if product.photos[1:] %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{product.id}}"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Предыдущий</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel{{product.id}}"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Следующий</span>
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        <div class="product-details">
+            <div class="product-price">
+                <p>{{product.price}}</p>
+                <img src="https://img.icons8.com/?size=192&id=16479&format=png">
+            </div>
+            <div class="product-name">
+                <a href="/product/{{product.id}}">{{product.name}}</a>
+            </div>
+            <div class="buying-progress-bar" style="width: 100%; display: flex; min-height: 4px; flex-direction: row;">
+                <div class="numbers_sells"
+                    style="margin-right: 5px; font-size: 12px; display: flex; flex-direction: row;">
+                    <p id="count-of-products-{{product.id}}">{{product.count}}</p>
+                    <p> шт</p>
+                </div>
+                <div class="progress"
+                    style="margin-top: 8px; height: 4px; width: {{100 * (product.count / (product.count + product.sells_count))}}%; background-color: orange;">
+                </div>
+                <div class="light-progress-bar"
+                    style="margin-top: 8px; height: 4px; width: {{100 * (1 - (product.count / (product.count + product.sells_count)))}}%; background-color: lightgrey;">
+                </div>
+            </div>
+            <div class="buy-button">
+                <div class="product-card">
+                    <div class="quantity-container qc-{{product.id}}" {% if counts[loop.index0]==0 %}hidden{% endif %}>
+                        <button class="minus-btn-{{product.id}} btn-cumzone"
+                            style="width: fit-content !important; padding-left: 17px; padding-right: 17px;" onclick="
+                                    
+                                    const plusBtn = document.querySelector('.plus-btn-{{product.id}}');
+                                                    const countOfProductss = document.querySelector('#count-of-products-{{product.id}}');
+                                                    const quantityy = document.querySelector('.quantity-{{product.id}}');
+                                                    if (Number(quantityy.value) <= 1) {
+                                                        document.querySelector('.qc-{{product.id}}').toggleAttribute('hidden');
+                                                        document.querySelector('#ad-cart-{{product.id}}').toggleAttribute('hidden');
+                                                    };
+                                                    if (Number(quantityy.value) == Number(countOfProductss.innerHTML)) {
+                                                        plusBtn.classList.remove('disabled-btn');
+                                                        plusBtn.toggleAttribute('disabled');
+                                                    };
+                                                    MinusCount({{product.id}});
+                                    "> - </button>
+                        <input disabled="disabled" class="quantity-{{product.id}}" type="number"
+                            value="{{counts[loop.index0]}}">
+                        <button
+                            class="plus-btn-{{product.id}} btn-cumzone {% if product.count == counts[loop.index0] %}disabled-btn{% endif %}"
+                            {% if product.count==counts[loop.index0] %}disabled{% endif %}
+                            style="width: fit-content !important; padding-left: 16px; padding-right: 16px;" onclick="
+                                    
+                                   PlusCount({{product.id}});
+                                                    const countOfProducts = document.querySelector('#count-of-products-{{product.id}}');
+                                                    if (document.querySelector('.quantity-{{product.id}}').value == Number(countOfProducts.innerHTML)) {
+                                                        this.toggleAttribute('disabled');
+                                                        this.classList.add('disabled-btn');
+                                                    };
+                                    "> + </button>
+                    </div>
+                    <button id="ad-cart-{{product.id}}" class="add-to-cart-btn btn-cumzone" onclick="
+                                addToCart({{product.id}});
+                                const quantityContainer = document.querySelector('.qc-{{product.id}}');
+                                quantityContainer.toggleAttribute('hidden');
+                                this.toggleAttribute('hidden');
+                                const quantity = document.querySelector('.quantity-{{product.id}}');
+                                quantity.value = 1;
+                                " type="button" class='btn-cumzone' {% if counts[loop.index0] !=0 %}hidden{% endif %}>В
+                        корзину</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

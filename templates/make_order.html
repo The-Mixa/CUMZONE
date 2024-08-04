@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 class="page-in-main">Оформление заказа</h1>
+<div class="products-list">
+    <div class="products-in-order" style="font-size: 18px">
+        <p>Товары в заказе</p>
+    </div>
+    {% for product in products %}
+        <div >
+            <p>{{product.name}}    - {{counts[loop.index0]}}шт</p>
+        </div>
+    {% endfor %}
+    <div style="min-height: 2px; width: 100%; background-color: grey;"></div>
+    <div class="product-price">
+        <p>{{all_price}}</p>
+        <img src="https://img.icons8.com/?size=192&id=16479&format=png">
+    </div>
+</div>
+
+<div class="form-for-order">
+    <div class="products-in-order" style="font-size: 18px">
+        <p>Дополнительная информация </p>
+    </div>
+    <form style="margin: 0 !important" action="" method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.point.label }}<br>
+            {{ form.point()}}<br>
+            {% for error in form.point.errors %}
+        <p class="alert alert-danger" role="alert">
+            {{ error }}
+        </p>
+        {% endfor %}
+        </p>
+    
+        <p style="margin-top: 20px; width: fit-content;">{{ form.submit(type="submit", class="btn-cumzone") }}</p>
+        {{message}}
+    </form>
+</div>
+
+
+
+{% endblock %}

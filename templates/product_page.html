@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="path-to-product" style="margin-top: 50px;">
+    <script>
+        document.write('<a class="btn-cumzone to-main-btn" href="' + document.referrer + '">Назад</a>');
+    </script>
+    <div class="path">
+        <a class="link-cumzone" href="/products/{{product.category}}">{{category}}</a>
+        <p>/</p>
+        <a class="link-cumzone" href="/product/{{product.id}}">{{product.name}}</a>
+    </div>
+</div>
+<div class="product-page-info">
+    <div class="main-data">
+        <div class="product-page-image">
+            <div class="carousel slide" id="carousel{{product.id}}">
+                <div class="carousel-indicators">
+                    {% if product.photos[1:] %}
+                    <button type="button" data-bs-target="#carousel{{product.id}}" data-bs-slide-to="0" class="active"
+                        aria-label="Slide 1"></button>
+                    {% for photo in product.photos[1:] %}
+                    <button type="button" data-bs-target="#carousel{{product.id}}" data-bs-slide-to="{{loop.index}}"
+                        aria-label="Slide {{loop.index + 1}}"></button>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <a href="/product/{{product.id}}">
+                            <img src="{{product.photos[0].path}}" class="d-block w-100" alt="иди нахуй">
+                        </a>
+                    </div>
+                    {% for photo in product.photos[1:] %}
+                    <div class="carousel-item">
+                        <a href="/product/{{product.id}}">
+                            <img src="{{photo.path}}" class="d-block w-100" alt="иди нахуй">
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if product.photos[1:] %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{product.id}}"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Предыдущий</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel{{product.id}}"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Следующий</span>
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        <div class="product-page-data">
+            <div>
+                <div class="product-name">
+                    <p style="font-size: 20px">{{product.name}}</p>
+                </div>
+                <div class="product-price">
+                    <p>{{product.price}}</p>
+                    <img src="https://img.icons8.com/?size=192&id=16479&format=png">
+                </div>
+            </div>
+            <div>
+                <div class="product-rating">
+                    {% if product.sells_count %}
+                    <p style="color: grey">★{{product.rating}} 🗯️{{product.comments|length}}</p>
+                    {% else %}
+                    <p style="color: grey">Нет продаж</p>
+                    {% endif %}
+                </div>
+                <div class="buying-progress-bar"
+                    style="width: 100%; display: flex; min-height: 4px; flex-direction: row;">
+                    <div class="numbers_sells"
+                        style="margin-right: 5px; font-size: 12px; display: flex; flex-direction: row;">
+                        <p id="count-of-products-{{product.id}}">{{product.count}}</p>
+                        <p> шт</p>
+                    </div>
+                    <div class="progress"
+                        style="margin-top: 8px; height: 4px; width: {{100 * (product.count / (product.count + product.sells_count))}}%; background-color: orange;">
+                    </div>
+                    <div class="light-progress-bar"
+                        style="margin-top: 8px; height: 4px; width: {{100 * (1 - (product.count / (product.count + product.sells_count)))}}%; background-color: lightgrey;">
+                    </div>
+                </div>
+                <div class="buy-button">
+                    <div class="product-card">
+                        <div class="quantity-container qc-{{product.id}}" {% if count ==0 %}hidden{% endif %}>
+                            <button class="minus-btn-{{product.id}} btn-cumzone"
+                                style="width: fit-content !important; padding-left: 17px; padding-right: 17px;" onclick="
+                                        
+                                        const plusBtn = document.querySelector('.plus-btn-{{product.id}}');
+                                        const countOfProductss = document.querySelector('#count-of-products-{{product.id}}');
+                                        const quantityy = document.querySelector('.quantity-{{product.id}}');
+                                        if (Number(quantityy.value) <= 1) {
+                                            document.querySelector('.qc-{{product.id}}').toggleAttribute('hidden');
+                                            document.querySelector('#ad-cart-{{product.id}}').toggleAttribute('hidden');
+                                        };
+                                        if (Number(quantityy.value) == Number(countOfProductss.innerHTML)) {
+                                            plusBtn.classList.remove('disabled-btn');
+                                            plusBtn.toggleAttribute('disabled');
+                                        };
+                                        MinusCount({{product.id}});
+                                        "> - </button>
+                            <input disabled="disabled" class="quantity-{{product.id}}" type="number" value="{{count}}">
+                            <button class="plus-btn-{{product.id}} btn-cumzone"
+
+                                style="width: fit-content !important; padding-left: 16px; padding-right: 16px;" onclick="
+                                        PlusCount({{product.id}});
+                                        const countOfProducts = document.querySelector('#count-of-products-{{product.id}}');
+                                        if (document.querySelector('.quantity-{{product.id}}').value == Number(countOfProducts.innerHTML)) {
+                                            this.toggleAttribute('disabled');
+                                            this.classList.add('disabled-btn');
+                                        };
+                
+                                        
+                                        "> + </button>
+                        </div>
+                        <button id="ad-cart-{{product.id}}" class="add-to-cart-btn btn-cumzone" onclick="
+                                    addToCart({{product.id}});
+                                    const quantityContainer = document.querySelector('.qc-{{product.id}}');
+                                    quantityContainer.toggleAttribute('hidden');
+                                    this.toggleAttribute('hidden');
+                                    const quantity = document.querySelector('.quantity-{{product.id}}');
+                                    quantity.value = 1;
+                                    " type="button" class='btn-cumzone' {% if count !=0 %}hidden{% endif %}>В
+                            корзину</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="/seller/{{product.seller.id}}" style="text-decoration: none;">
+        <div class="product-page-seller">
+
+            <div class="pp-seller-image">
+                <img src="{{product.seller.profile_image}}" style="width: 80px; height: 80px; border-radius: 50px;">
+            </div>
+
+
+            <div class="pp-seller-info">
+                <h1 style="font-size: 30px; color: white; font-weight: 800;">{{product.seller.nickname}}</h1>
+            </div>
+        </div>
+    </a>
+
+    <div class="product-page-description">
+        <h1 style="font-size: 30px; color: white; font-weight: 800;">Описание</h1>
+        <p>{{product.description}}</p>
+    </div>
+
+
+
+    <div class="product-page-comments">
+        <div class='make-comments-block' {% if not can_make_comment %}hidden{% endif %}>
+            <h1 style="font-size: 20px; color: white; font-weight: 800;">Напишите свой отзыв</h1>
+            <div class="make-comment-container">
+                <textarea class="textarea" id="comment-text" placeholder="Напиши чёнить"></textarea>
+                <button class="btn-cumzone save-comment-button" id="make-comment-btn"
+                    onclick="makeComment({{product.id}}, {{current_user.id}})">Отправить</button>
+            </div>
+        </div>
+
+        <h1 class='anchor' style="font-size: 30px; color: white; font-weight: 800;">Отзывы</h1>
+        <div class="comments">
+            {% for comment in product.comments %}
+            <div class="comment" style="margin: 5px; background-color: #444; border-radius: 15px; padding: 5px;">
+                <div style="display: flex; flex-direction: row; justify-content: space-between; margin-right: 50px;flex-wrap: wrap;">
+                    <div style="display: flex; flex-direction: row;">
+                        <div class="comment-author-image" style="margin-right: 20px;">
+                            <img style="width: 50px; height: 50px; border-radius: 25px;"
+                                src="{{comment.user.profile_image}}">
+                        </div>
+                        <div class="comment-author-info">
+                            <p style="font-size: 20px">{{comment.user.nickname}}</p>
+                            <p style="color:grey">{{comment.create_date}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="comment-text">
+                    <p>{{comment.text}}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <p style="color: #222; font-size: 1px;" id="current_user-nickname">{{current_user.nickname}}</p>
+    <p style="color: #222; font-size: 1px;" id="current_user-profile_image">{{current_user.profile_image}}</p>
+    <p style="color: #222; font-size: 1px;" id="date_now">{{date_now}}</p>
+    {% endblock %}

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<br>
+<div class='asdf'  style="display: flex; flex-direction: row;">
+    <h1 class="page-in-main" style="margin: 0 !important; margin-top: 5px">Профиль</h1>
+    <button class="edit-profile-button btn b" style="background-color: #333; margin-bottom: 5px; padding: 5px; border-radius: 5px; margin-left: 10px;"
+    onclick="window.location.replace('/profile/edit')">
+        <img src="/static/img/pencil-edit-svgrepo-com.svg" style="height: 40px; margin: 0 !important">
+    </button>
+    <button class="quit-profile-button btn b" style="background-color: #333; margin-bottom: 5px; border-radius: 5px; padding: 5px; padding-left: 10px; padding-right: 10px; margin-left: 10px"
+    onclick="window.location.replace('/logout')">
+        <img src="/static/img/exit-svgrepo-com.svg" style="height: 30px;">
+
+    </button>
+</div>
+<div class="profile-heading">
+    <div
+        style="display: flex; flex-direction: row; background-color: #333; padding: 15px; border-radius: 15px; margin: 10px;">
+        <div class="profile-image">
+            <img src="{{current_user.profile_image}}"
+                style="width: 200px; height: 200px; border-radius: 100px; margin-right: 40px;">
+        </div>
+
+        <div class="profile-name">
+            <p style="font-size: 45px; color: white; font-weight: 8000;">{{current_user.nickname}}</p>
+        </div>
+    </div>
+    <div clsss="block" style="background-color: #333; padding: 15px; border-radius: 15px; margin: 10px; width: 100%;">
+        <p class='big-font' style="text-align: center;">{{current_user.orders_bougth}}</p>
+        <p style="color: grey; font-size: 20px; text-align: center;">Совершённые заказы</p>
+    </div>
+</div>
+<h1 class="page-in-main">Заказы</h1>
+{% if orders %}
+<p style="font-weight: 800; color: grey">Нажми на заказ, чтобы расширить информацию</p>
+<div class="orders">
+    {% for order in orders %}
+    <div class="order">
+        <a href="" class="open-order-{{order.id}}">
+            <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                <div class="order-info">
+                    <p class="order-id" style="font-size: 20px;">Заказ №{{ order.id }} от <span
+                            style="padding: 2px; background-color: #444; color: white; border-radius: 5px;">{{order.seller.nickname}}</span>
+                        в <span
+                            style="padding: 2px; background-color: #444; color: white; border-radius: 5px;">{{order.point}}</span>
+                    </p>
+                    <p class="order-date" style="color: grey;">{{ order.create_time }}</p>
+                    <p class="order-status"
+                        style="color: white; background-color: orange; border-radius: 5px; padding: 5px; width: fit-content;">
+                        {{order.status}}</p>
+                </div>
+
+                <div class="product-price">
+                    <p>{{prices[loop.index0]}}</p>
+                    <img src="https://img.icons8.com/?size=192&id=16479&format=png">
+                </div>
+            </div>
+        </a>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $(".open-order-{{order.id}}").click(function () {
+                    $(`#opens-content-{{order.id}}`).slideToggle("fast");
+                    $(this).toggleClass("active"); return false;
+                });
+            });
+        </script>
+        <div id="opens-content-{{order.id}}" style="display:none;">
+
+            <div class="order-products">
+                <p style="font-size: 20px; font-weight: 800;">Товары в заказе</p>
+                {% for product in order.products %}
+                <div class="order-product">
+                    <p class="order-product-name">· {{ product.product.name }} - {{ product.count }}шт</p>
+                    <p class="order-product-count"></p>
+                </div>
+                {% endfor %}
+                {% if order.status == 'Доставлен' %}
+                <div style="min-height: 2px; width: 100%; background-color: grey;"></div>
+                <br>
+
+                <button class="btn-cumzone" onclick="
+                document.querySelector('.background-dark').toggleAttribute('hidden');
+                document.querySelector('.confirm-change-status-form').toggleAttribute('hidden');
+                document.querySelector('.id-for-change').innerHTML = '{{ order.id}}';
+                document.querySelector('.status-for-change').innerHTML = 'Получен';
+                ">Подтвердить получение и оплату заказа</button>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    {% endfor %}
+</div>
+
+<div hidden class="confirm-change-status-form" style="z-index: 2;">
+    <h2 style="font-size: 20px; font-weight: 800; margin: 30px; color: white">Точно?</h2>
+    <div class="buttons">
+        <button class="btn-cumzone" onclick="changeOrderStatus(document.querySelector('.id-for-change').innerHTML, document.querySelector('.status-for-change').innerHTML);
+        document.querySelector('.background-dark').toggleAttribute('hidden');
+                document.querySelector('.confirm-change-status-form').toggleAttribute('hidden');
+                location.reload();
+                " style="width: fit-content;">Да</button>
+        <button class="btn btn-danger" onclick="document.querySelector('.background-dark').toggleAttribute('hidden');
+                document.querySelector('.confirm-change-status-form').toggleAttribute('hidden');"
+            style="font-weight: 800 !important; border-radius: 10px;">Нет</button>
+    </div>
+</div>
+{% else %}
+<h3 style="color:grey; font-weight: 800;">Заказов пока нету, давай затаримся, бро</h3>
+{% endif %}
+
+<p class="id-for-change" style="color: rgba(0, 0, 0, 0)"></p>
+<p class="status-for-change" style="color: rgba(0, 0, 0, 0)"></p>
+
+<div hidden class="background-dark"
+    style="z-index: 1; position: fixed; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.5); top: 0px; left: 0px;">
+</div>
+
+{% endblock %}

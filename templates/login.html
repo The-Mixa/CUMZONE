@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content">
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <h1 style="font-weight: 800; color: white">Вход в систему</h1>
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email(class="form-control") }}<br>
+            {% for error in form.email.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+        </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(class="form-control", type="password") }}<br>
+            {% for error in form.password.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+        </p>
+        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <p>Нет аккаунта? <a href="register">Зарегестрироваться</a></p>
+        <p>{{ form.submit(type="submit", class="btn btn-dark")}}</p>
+        <div>{{ message }}</div>
+    </form>
+</div>
+{% endblock %}

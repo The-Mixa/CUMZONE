@@ -1,0 +1,343 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<br>
+<div class="store-statistic">
+    <div class="block">
+        <p class='big-font'>{{orders_count}}</p>
+        <p style="color: grey;">Доставленные заказы</p>
+    </div>
+</div>
+<br>
+<button class="btn-cumzone" onclick="
+document.querySelector('.add-product-form').toggleAttribute('hidden');
+document.querySelector('.background-dark').toggleAttribute('hidden');">Добавить товар</button>
+
+
+<h1 class="page-in-main">Ваши товары</h1>
+{% if not products %}
+<h3 style="color:grey; font-weight: 800;">Бро, ты пока не продавец. Просто лох.</h3>
+{% else %}
+<div class="products-content">
+    {% for product in products %}
+    <div class="product" id="product-{{product.id}}">
+
+        <div class="product-image">
+            <div class="carousel slide" id="carousel{{product.id}}">
+                <div class="carousel-indicators">
+                    {% if product.photos[1:] %}
+                    <button type="button" data-bs-target="#carousel{{product.id}}" data-bs-slide-to="0" class="active"
+                        aria-label="Slide 1"></button>
+                    {% for photo in product.photos[1:] %}
+                    <button type="button" data-bs-target="#carousel{{product.id}}" data-bs-slide-to="{{loop.index}}"
+                        aria-label="Slide {{loop.index + 1}}"></button>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <a href="/product/{{product.id}}">
+                            <img src="{{product.photos[0].path}}" class="d-block w-100" alt="иди нахуй">
+                        </a>
+                    </div>
+                    {% for photo in product.photos[1:] %}
+                    <div class="carousel-item">
+                        <a href="/product/{{product.id}}">
+                            <img src="{{photo.path}}" class="d-block w-100" alt="иди нахуй">
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if product.photos[1:] %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{product.id}}"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Предыдущий</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carousel{{product.id}}"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Следующий</span>
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        <div class="product-details">
+            <div class="product-price">
+                <p>{{product.price}}</p>
+                <img src="https://img.icons8.com/?size=192&id=16479&format=png">
+            </div>
+            <div class="product-name">
+                <a href="/product/{{product.id}}">{{product.name}}</a>
+            </div>
+
+            <div class="buy-button">
+                <div class="product-card">
+                    <div class="quantity-container">
+                        <div class="delite-change-btns"
+                            style="display: flex;flex-direction: row; justify-content: space-between; padding: 5px; border-radius: 13px; background-color: #444; margin-bottom: 5px;">
+                            <button class="delite-product-btn btn" id="{{product.id}}"
+                                style="border-color: rgb(165, 42, 42); background-color: #333; border-radius: 10px; border-width: 2px; margin-right: 5px;"
+                                onclick="
+    const deliteMenu = document.querySelector('.delite-form');
+    const darkBackgroundd = document.querySelector('.background-dark');
+
+    darkBackgroundd.toggleAttribute('hidden');
+    deliteMenu.toggleAttribute('hidden');
+    id_del_field.innerHTML = this.id;">
+                                <img src="/static/img/garbage-trash-svgrepo-com.svg" style="width: 25px;">
+                            </button>
+                            <button class="change-count-btn btn btn-outline-secondary"
+                                style="width: fit-content !important; padding-left: 10px; padding-right: 10px;"
+                                id="{{product.id}}" onclick="
+    const id_edit_field = document.querySelector('.id-for-edit');
+    const editMenu = document.querySelector('#edit-form-{{product.id}}');
+    const darkBackground = document.querySelector('.background-dark');
+
+    darkBackground.toggleAttribute('hidden');
+    editMenu.toggleAttribute('hidden');
+    id_edit_field.innerHTML = this.id;">
+                                <img src="/static/img/pencil-edit-svgrepo-com.svg" style="width: 30px;">
+                            </button>
+                        </div>
+                        <div class="plus-minus-btns"
+                            style="display: flex;flex-direction: row; justify-content: space-between; padding: 5px; border-radius: 13px; margin-bottom: 5px;">
+                            <input disabled="disabled" class="quantity" value="{{product.count}} шт"
+                                style="margin-left: 15px; background-color: #444 !important; min-width: 100px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div hidden class="edit-form" id="edit-form-{{product.id}}" style='z-index: 2;'>
+        <h1 style="font-size: 30px; font-weight: 800; color: white;">Изменение товара</h1>
+        <div class="forms" style="display: flex; flex-direction: column;">
+            <p style="color: lightgrey; font-size: 15px; font-weight: 800;">Название</p>
+            <input type='text' class="input-name" value="{{product.name}}"
+                style="margin: 5px; width: 100%; text-align: left;">
+            <br>
+            <p style="color: lightgrey; font-size: 15px; font-weight: 800;">Описание</p>
+            <input class="input-description" type='text' placeholder="Описание"
+                style="margin: 5px; width: 100%; text-align: left; min-height: 170px !important;" maxlength="300"
+                value="{{product.description}}">
+            <br>
+            <p style="color: lightgrey; font-size: 15px; font-weight: 800;">Цена</p>
+            <input type='number' min="1" class="input-price" value="{{product.price}}"
+                style="margin: 5px; width: 100%; text-align: left;">
+            <br>
+            <p style="color: lightgrey; font-size: 15px; font-weight: 800;">Количество</p>
+            <input type='number' min="1" class="input-count" value="{{product.count}}"
+                style="margin: 5px; width: 100%; text-align: left;">
+            <br>
+        </div>
+        <div class="buttons">
+            <button class="btn btn-danger"
+                style="font-weight: 800 !important; border-radius: 10px !important; margin-right: 10px;" onclick="document.querySelector('#edit-form-{{product.id}}').toggleAttribute('hidden');
+                     document.querySelector('.background-dark').toggleAttribute('hidden');">Отмена</button>
+            <button class="btn-cumzone acept-btn" style="font-weight: 800 !important;" onclick="
+const name_ = document.querySelector('.input-name');
+const description = document.querySelector('.input-description');
+const price = document.querySelector('.input-price');
+const count = document.querySelector('.input-count');
+const id_edit_field = document.querySelector('.id-for-edit');
+document.querySelector('#edit-form-{{product.id}}').toggleAttribute('hidden');
+document.querySelector('.background-dark').toggleAttribute('hidden');
+document.querySelector('.quantity').value = count.value + ' шт';
+document.querySelector('.product-name').innerHTML = name_.value;
+document.querySelector('.product-name').style.color = 'white';
+document.querySelector('.product-price p').innerHTML = price.value;
+
+editProduct(name_.value, description.value, price.value, count.value, id_edit_field.innerHTML);
+
+function editProduct(name_, description_, price_, count_, productId_) {
+    fetch(`/edit_product548548/${productId_}/${name_}/${description_}/${price_}/${count_}`,
+        { method: 'POST' }
+    )
+}
+">Подтвердить</button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+
+
+<div hidden class="background-dark"
+    style="z-index: 1; position: fixed; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.5); top: 0px; left: 0px;">
+</div>
+
+<div hidden class="delite-form" style="z-index: 2;">
+    <p>Точно удаляем?</p>
+    <div class="buttons">
+        <button class="delite btn btn-danger" style="font-weight: 800 !important;">Да</button>
+        <button class="not-delite btn btn-secondary" style="font-weight: 800 !important;">Нет</button>
+    </div>
+</div>
+
+<div class="add-product-form" {% if hideform %}hidden{% endif %}>
+    <link rel="stylesheet" href="/static/css/login.css">
+
+    <form action="" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <h1 style="font-weight: 800; color: white">Добавление товара</h1>
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(class="form-control", type="text") }}<br>
+            {% for error in form.name.errors %}
+        <p class="alert alert-danger" role="alert">
+            {{ error }}
+        </p>
+        {% endfor %}
+        </p>
+        <p>
+            {{ form.description.label }}<br>
+            {{ form.description(class="form-control", type="text") }}<br>
+            {% for error in form.description.errors %}
+        <p class="alert alert-danger" role="alert">
+            {{ error }}
+        </p>
+        {% endfor %}
+        </p>
+        <p>
+            {{ form.price.label }}<br>
+            {{ form.price(class="form-control") }}<br>
+            {% for error in form.price.errors %}
+        <p class="alert alert-danger" role="alert">
+            {{ error }}
+        </p>
+        {% endfor %}
+        </p>
+        <p>
+            {{ form.count.label }}<br>
+            {{ form.count(class="form-control", type="text") }}<br>
+            {% for error in form.count.errors %}
+        <p class="alert alert-danger" role="alert">
+            {{ error }}
+        </p>
+        {% endfor %}
+        </p>
+        <p>
+            {{ form.screenshots.label }}<br>
+            {{ form.screenshots(multiple="") }}<br>
+            {% for error in form.screenshots.errors %}
+        <p class="alert alert-danger" role="alert">
+            {{ error }}
+        </p>
+        {% endfor %}
+        </p>
+        <p>
+            {{ form.category.label }}<br>
+            {{ form.category()}}<br>
+            {% for error in form.category.errors %}
+        <p class="alert alert-danger" role="alert">
+            {{ error }}
+        </p>
+        {% endfor %}
+        </p>
+        <div class="buttons-on-product-form" style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <p style="margin: 5px;">{{ form.submit(type="submit", class="btn btn-dark") }}</p>
+            <button style="margin: 5px;" class="btn btn-danger" onclick="
+document.querySelector('.add-product-form').toggleAttribute('hidden');
+document.querySelector('.background-dark').toggleAttribute('hidden');
+            ">Закрыть</button>
+        </div>
+
+        <p style="background-color: orange; color: white;">{{ message }}</p>
+
+
+    </form>
+</div>
+
+<p class="id-for-delite" style="color: rgba(0, 0, 0, 0)"></p>
+<p class="id-for-edit" style="color: rgba(0, 0, 0, 0)"></p>
+<p class="id-for-change" style="color: rgba(0, 0, 0, 0)"></p>
+<p class="status-for-change" style="color: rgba(0, 0, 0, 0)"></p>
+
+<h1 class="page-in-main">Заказы</h1>
+
+{% if orders %}
+<p style="font-weight: 800; color: grey">Нажми на заказ, чтобы расширить информацию</p>
+<div class="orders">
+    {% for order in orders %}
+    <div class="order">
+        <a href="" class="open-order-{{order.id}}">
+            <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                <div class="order-info">
+                    <p class="order-id" style="font-size: 20px;">Заказ №{{ order.id }} для <span
+                            style="padding: 2px; background-color: #444; color: white; border-radius: 5px;">{{order.nickname}}</span> в <span style="padding: 2px; background-color: #444; color: white; border-radius: 5px;">{{order.point}}</span>
+                    </p>
+                    <p class="order-date" style="color: grey;">{{ order.create_time }}</p>
+                    <p class="order-status" style="color: white; background-color: orange; border-radius: 5px; padding: 5px; width: fit-content;">{{order.status}}</p>
+                </div>
+
+                <div class="product-price">
+                    <p>{{prices[loop.index0]}}</p>
+                    <img src="https://img.icons8.com/?size=192&id=16479&format=png">
+                </div>
+            </div>
+        </a>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $(".open-order-{{order.id}}").click(function () {
+                    $(`#opens-content-{{order.id}}`).slideToggle("fast");
+                    $(this).toggleClass("active"); return false;
+                });
+            });
+        </script>
+        <div id="opens-content-{{order.id}}" style="display:none;">
+
+            <div class="order-products">
+                <p style="font-size: 20px; font-weight: 800;">Товары в заказе</p>
+                {% for product in order.products %}
+                <div class="order-product">
+                    <p class="order-product-name">· {{ product.product.name }} - {{ product.count }}шт</p>
+                    <p class="order-product-count"></p>
+                </div>
+                {% endfor %}
+                <div style="min-height: 2px; width: 100%; background-color: grey;"></div>
+                <br>
+                {% if order.status == 'Оформлен' %}
+                <button class="btn-cumzone" onclick="
+                document.querySelector('.background-dark').toggleAttribute('hidden');
+                document.querySelector('.confirm-change-status-form').toggleAttribute('hidden');
+                document.querySelector('.id-for-change').innerHTML = '{{ order.id}}';
+                document.querySelector('.status-for-change').innerHTML = 'Доставлен';
+                ">Подтвердить доставку заказа</button>
+                {% elif order.status == 'Получен' %}
+                <button class="btn-cumzone" onclick="
+                document.querySelector('.background-dark').toggleAttribute('hidden');
+                document.querySelector('.confirm-change-status-form').toggleAttribute('hidden');
+                document.querySelector('.id-for-change').innerHTML = '{{ order.id}}';
+                document.querySelector('.status-for-change').innerHTML = 'Оплачен и завершён';
+                ">Подтвердить оплату заказа</button>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    {% endfor %}
+</div>
+{% else %}
+<h3 style="color:grey; font-weight: 800;">Заказов пока нету, но ты не плачь, пожалуйста</h3>
+{% endif %}
+
+
+<div hidden class="confirm-change-status-form" style="z-index: 2;">
+    <h2 style="font-size: 20px; font-weight: 800; margin: 30px; color: white">Точно?</h2>
+    <div class="buttons">
+        <button class="btn-cumzone" onclick="changeOrderStatus(document.querySelector('.id-for-change').innerHTML, document.querySelector('.status-for-change').innerHTML);
+        document.querySelector('.background-dark').toggleAttribute('hidden');
+                document.querySelector('.confirm-change-status-form').toggleAttribute('hidden');
+                location.reload();
+                "
+                style="width: fit-content;">Да</button>
+        <button class="btn btn-danger" onclick="document.querySelector('.background-dark').toggleAttribute('hidden');
+                document.querySelector('.confirm-change-status-form').toggleAttribute('hidden');"
+                style="font-weight: 800 !important; border-radius: 10px;">Нет</button>
+    </div>
+</div>
+{% endblock %}

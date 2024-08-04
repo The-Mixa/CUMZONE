@@ -1,0 +1,16 @@
+form{
+    width: fit-content;
+    min-width: 50%;
+    margin: auto;
+}
+
+form input {
+    width: fit-content;
+    color: black !important;
+    text-align: start !important;
+}
+
+.btn-dark{
+    background-color: orange !important;
+    color: white !important;
+}

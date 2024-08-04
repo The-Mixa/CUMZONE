@@ -1,0 +1,39 @@
+.products-list{
+    background-color: #333;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 30px;
+}
+
+.form-for-order{
+    background-color: #333;
+    border-radius: 15px;
+    padding: 15px;
+}
+
+.order{
+    background-color: #333;
+    border-radius: 15px;
+    padding: 15px;
+}
+
+a{
+    text-decoration: None !important;
+}
+
+a:hover {
+    text-decoration: None !important;
+}
+
+.order .product-price p{
+    background-color: #444;
+}
+
+
+
+.order .product-price{
+    background-color: #444;
+    padding-bottom: 70px;
+    padding-left: 10px;
+    border-radius: 10px;
+}

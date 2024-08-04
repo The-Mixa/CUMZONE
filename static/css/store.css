@@ -1,0 +1,123 @@
+.delite-product-btn:hover{
+    background-color: #555 !important;
+}
+
+.plus-minus-btns{
+    background-color: #444 !important;
+}
+
+.big-font{
+    font-size: 50px;
+    font-weight: 800;
+    color: white;
+}
+
+.block{
+    text-align: center;
+}
+
+.store-statistic{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: #333;
+    border-radius: 15px;
+}
+
+.delite-form{
+    background-color: #444;
+    border-radius: 15px;
+    width: fit-content;
+    margin: auto;
+    padding: 50px;
+    position: fixed;
+    top: calc(50vh - 82px);
+    left: calc(50vw - 114px);
+}
+
+.edit-form{
+    background-color: #444;
+    border-radius: 15px;
+    width: fit-content;
+    margin: auto;
+    padding: 50px;
+    position: fixed;
+    top: calc(50vh - 304px);
+    left: calc(50vw - 209px);
+}
+
+.buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.input-description {
+    width: 100%;
+    color: white !important;
+    background-color: #333!important;
+    overflow: hidden!important;
+    resize: none !important;
+    border-radius: 5px !important;
+    box-sizing: border-box !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    border-width: 0;
+}
+
+input {
+    border-radius: 5px;
+    min-height: 40px;
+}
+
+.add-product-form{
+    background-color: #444;
+    border-radius: 15px;
+    position: fixed;
+    z-index: 3;
+    width: 50vw;
+    max-width: 700px;
+    top: 100px;
+}
+
+@media (max-width: 800px){
+    .add-product-form{
+        width: 95vw;
+        left: 2.5vw;
+        min-width: none;
+    }
+}
+@media (min-width: 801px) {
+    .add-product-form{
+        left: 25vw;
+        min-width: 400px;
+    }
+}
+
+@media (min-width: 1401px){
+    .add-product-form{
+        left: calc(50vw - 350px);
+        min-width: 400px;
+    }
+}
+
+select{
+    color: black !important;
+    font-weight: 800 !important;
+}
+
+form{
+    margin: 30px !important;
+    width: calc(100% - 60px) !important;
+}
+
+.confirm-change-status-form{
+    background-color: #444;
+    border-radius: 15px;
+    width: fit-content;
+    margin: auto;
+    padding: 50px;
+    position: fixed;
+    top: calc(50vh - 82px);
+    left: calc(50vw - 114px);
+}

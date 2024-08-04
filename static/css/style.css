@@ -1,0 +1,69 @@
+body {
+    background-color: #222 !important;
+}
+
+.container {
+    padding-top: 50px;
+    background-color: #222;
+    padding-left: 10vw;
+    padding-right: 10vw;
+}
+
+p {
+    color: white
+}
+
+.container-fluid a {
+    color: white;
+    font-weight: 700;
+    padding-top: 0px;
+}
+
+.container-fluid a:hover {
+    color: orange;
+    background-color: white;
+    border-radius: 10px;
+    height: fit-content;
+}
+
+.container-fluid a:focus {
+    color: orange;
+    background-color: white;
+    border-radius: 10px;
+    height: fit-content;
+}
+
+.container-fluid li {
+    margin-right: 10px;
+    width: fit-content;
+    font-size: 15px;
+}
+
+span {
+    background-color: white;
+}
+
+.navbar-toggle {
+    border-color: white !important;
+}
+
+.nav{
+    border-width: 0px !important;
+}
+
+body::-webkit-scrollbar {
+    width: 0.2em;
+}
+
+body::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: grey;
+    outline: 1px solid grey;
+}
+
+.container {
+    margin-bottom: 200px;
+}

@@ -1,0 +1,10 @@
+.profile-heading{
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+}
+
+.asdf button:hover{
+    background-color: #444 !important;
+}

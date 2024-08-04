@@ -1,0 +1,53 @@
+.logotype {
+    color: orange;
+    max-width: 90vw;
+    border-radius: 20px;
+    background-color: white;
+    margin: auto;
+    width: fit-content;
+    padding: 10px;
+    margin-top: 20vh;
+    margin-bottom: 30px;
+}
+
+h1{
+    font-weight: bold !important;
+}
+h2 {
+    color: lightgrey !important;
+    font-size: 50px !important;
+    max-width: 80% !important;
+    margin: auto !important;
+    text-align: center !important;
+    font-weight: 800 !important;
+}
+
+body {
+    padding: auto;
+    background-image: url("/static/img/back-preview.jpg") !important;
+    background-size: 300vh !important;
+    background-position: center !important;
+    align-items: center !important;
+}
+
+.btn-primary {
+    background-color: orange !important;
+    border-color: orange !important;
+}
+
+.btn-primary:hover {
+    background-color: rgb(189, 123, 0) !important;
+    border-color: rgb(189, 123, 0) !important;
+}
+
+.buttons {
+    margin: auto !important;
+    width: fit-content !important;
+    margin-top: 30px !important;
+}
+
+.buttons a {
+    height: 100% !important;
+    font-size: 20px !important;
+    font-weight: 800 !important;
+}

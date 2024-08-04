@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div {% if not products %}hidden {% endif %} class="lohloh">
+    <h1 class="page-in-main">Ваша корзина</h1>
+    <div class="cart-blocks">
+        <div class="products-cart">
+            {% for product in products %}
+            <div class="product-in-cart product-{{product.id}}" style="display: flex; flex-direction: row; justify-content: space-between;">
+                <div style="display: flex; flex-direction: row;">
+                    <div class="product-image-in-cart" style="margin: 10px;">
+                        <a href="/product/{{product.id}}">
+                            <img class="product-image-in-cart-img" src="{{product.photos[0].path}}"
+                                style="max-height: 100px;">
+                        </a>
+                    </div>
+                    <div class="product-name-price-in-cart" stlyle='margin: 10px;'>
+
+                        <a class="product-name-ref" href="/product/{{product.id}}">{{product.name}}</a>
+
+                        <div class="product-price">
+                            <p id="product-price-{{product.id}}" style="font-size: 25px !important;">{{product.price *
+                                counts[loop.index0]}}</p>
+                            <img style="max-height: 25px; margin-top: 5px"
+                                src="https://img.icons8.com/?size=192&id=16479&format=png">
+                        </div>
+                    </div>
+                </div>
+                <div class="buy-button"
+                    style="margin: 37px; background-color: #555; padding: 5px; border-radius: 15px;">
+                    <div class="product-card">
+                        <div class="quantity-container quantity-container-{{product.id}}" {% if counts[loop.index0]==0 %}hidden{% endif %}>
+                            <button class="minus-btn-{{product.id}} btn-cumzone" id="{{product.id}}" onclick="
+                            const container_div = document.querySelector('.lohloh');
+                            
+                            if (Number(document.querySelector('#product-price-{{product.id}}').innerHTML) == {{product.price}}){
+                                document.querySelector('.product-{{product.id}}').remove();
+                                if ($('.product-in-cart').size() == 0) {
+                                    container_div.toggleAttribute('hidden');
+                                    document.querySelector('.loh').toggleAttribute('hidden');
+                                };
+                            };
+
+                            MinusCount({{product.id}});
+                            document.querySelector(`#product-price-{{product.id}}`).innerHTML = document.querySelector(`#product-price-{{product.id}}`).innerHTML - {{product.price}};
+                            document.querySelector(`.all-price`).innerHTML = document.querySelector(`.all-price`).innerHTML - {{product.price}};"
+                            
+                            
+                                style="width: fit-content !important; padding-left: 17px; padding-right: 17px;"> -
+                            </button>
+                            <input disabled="disabled" class="quantity-{{product.id}}" type="number"
+                                value="{{counts[loop.index0]}}">
+                            <button class="plus-btn-{{product.id}} btn-cumzone" id="{{product.id}}"
+                                style="width: fit-content !important; padding-left: 16px; padding-right: 16px;" onclick="document.querySelector(`#product-price-{{product.id}}`).innerHTML = Number(document.querySelector(`#product-price-{{product.id}}`).innerHTML) + {{product.price}};
+                            document.querySelector(`.all-price`).innerHTML = Number(document.querySelector(`.all-price`).innerHTML) + {{product.price}};
+                            PlusCount({{product.id}});"> + </button>
+                        </div>
+                        <button id="add-to-cart-btn" id="{{product.id}}" class="add-to-cart-btn btn-cumzone" onclick="addToCart({{product.id}})
+                            const addToCartBtn = this;
+                            const quantityContainer = document.querySelector('.quantity-container-{{product.id}}');
+
+                            const minusBtn = document.querySelector('.minus-btn-{{product.id}}');
+                            const plusBtn = document.querySelector('.plus-btn-{{product.id}}');
+                            
+                            " type="button" class='btn-cumzone' {% if counts[loop.index0] !=0 %}hidden{% endif %}>В
+                            корзину</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="price-stat" style="display: flex; flex-direction: column;">
+            <div class="product-price">
+                <div style="display: flex; flex-direction: row;">
+                    <p style="font-size: 20px; color: lightgrey; margin-right: 10px;">Итоговая<br>стоимость: </p>
+                    <p style="font-size: 40px;" class="all-price">{{all_price}}</p>
+                </div>
+                <img style="max-height: 40px; margin-top: 7px"
+                    src="https://img.icons8.com/?size=192&id=16479&format=png">
+            </div>
+            <a href="/make_order" class="btn-cumzone">Продолжить оформление</a>
+        </div>
+    </div>
+</div>
+
+<p {% if products %}hidden{% endif %} class="loh" style="color: grey; font-size: 30px; font-weight: 800;"><br><br>В
+    вашей
+    корзине пусто<br> Начни покупки прямо сейчас, нищеброд</p>
+{% endblock %}
